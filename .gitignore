@@ -1,0 +1,5 @@
+# Borradores, especificaciones locales y salidas de nlm
+docs/
+
+# Archivos del sistema macOS
+.DS_Store
