@@ -17,6 +17,7 @@ Generar un `README.md` en español con **simplicidad máxima**, visual y pensado
 > *(Cuotas orientativas sujetas a cambios de Google. Mantener el cuaderno por debajo de 50 fuentes permite que cualquier alumno con cuenta gratuita pueda clonarlo).*
 
 ## Estilo Pedagógico y Visual (`README.md`)
+- **Índice obligatorio alineado a `docs/specs.MD`:** Incluir siempre antes del apartado 1 un **índice navegable con enlaces ancla** que refleje 1 a 1 las 5 preguntas del enunciado (más Referencias), para que alumnos y evaluadores ubiquen cada respuesta al instante.
 - **Simplicidad máxima (alumnos desde cero):** Priorizar **solo lo esencial**. Evitar párrafos largos, jerga innecesaria y badges superfluos (dejar solo los badges útiles de NotebookLM).
 - **Imagen o esquema en cada apartado:** Incluir imágenes didácticas propias en `assets/` (verificadas visualmente) y, cuando aporte claridad de flujo, diagramas **Mermaid** muy simples y coloreados.
 - **Vídeos con timestamps exactos:** Enlazar los vídeos de YouTube siempre con **timestamps reales verificados (`&t=...s`)** directos al minuto donde se explica cada concepto.

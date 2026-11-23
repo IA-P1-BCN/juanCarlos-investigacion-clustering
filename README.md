@@ -7,6 +7,14 @@
 > **Cuaderno público con 25 fuentes** *(13 oficiales + 10 vídeos + 2 guías visuales)*.
 > Límites de NotebookLM por cuaderno: **Cuenta gratuita: 50** · **Google AI Plus: 100** · **Google AI Pro: 300**. Al tener **25 fuentes**, cualquiera puede abrirlo y **clonarlo gratis**.
 
+## Índice
+1. [¿Qué es el aprendizaje no supervisado y el clustering?](#1-aprendizaje-no-supervisado-y-clustering)
+2. [Clustering particional (centroides) vs. jerárquico](#2-particional-centroides-vs-jerárquico)
+3. [Clustering basado en densidad (DBSCAN)](#3-clustering-basado-en-densidad-dbscan)
+4. [Hiperparámetros y métodos de evaluación (Codo y Silueta)](#4-hiperparámetros-y-cómo-evaluar-la-calidad)
+5. [Los 4 algoritmos esenciales (K-Means, Aglomerativo, DBSCAN y GMM)](#5-los-4-algoritmos-esenciales)
+6. [Referencias](#6-referencias)
+
 ---
 
 ## 1. Aprendizaje no supervisado y clustering
