@@ -1,236 +1,241 @@
-# Investigación sobre Algoritmos de Clustering
+# Algoritmos de Clustering — Guía Visual desde Cero
 
 [![Abrir en NotebookLM](https://img.shields.io/badge/Abrir_en-NotebookLM-4285F4?style=for-the-badge&logo=notebooklm&logoColor=white)](https://notebook.google.com/notebook/51ec9ffc-637f-413e-9a76-d7a5848479d6)
+![Fuentes en NotebookLM](https://img.shields.io/badge/Fuentes_NotebookLM-25_verificadas-34A853?style=for-the-badge)
+[![Matriz Visual](https://img.shields.io/badge/Ver-Matriz_Visual_scikit--learn-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white)](https://scikit-learn.org/stable/auto_examples/cluster/plot_cluster_comparison.html)
+[![Algoritmos en GIFs](https://img.shields.io/badge/Ver-Algoritmos_en_GIFs-8E44AD?style=for-the-badge)](https://dashee87.github.io/data%20science/general/Clustering-with-Scikit-with-GIFs/)
 
-Investigación técnica sobre algoritmos de aprendizaje no supervisado enfocados en **clustering**, sus principales paradigmas, criterios de evaluación, hiperparámetros, ventajas, desventajas y aplicaciones en el mundo real.
+Guía **concisa y visual** sobre **aprendizaje no supervisado y clustering**, centrada en lo más crítico que necesitas dominar en una primera toma de contacto.
 
-## Índice
+> [!NOTE]
+> **Sobre el cuaderno público de NotebookLM (25 fuentes: 13 oficiales + 10 vídeos + 2 guías visuales):**
+> Límites orientativos de fuentes por cuaderno según plan de Google: **Cuenta gratuita (*Free*): 50** · **Google AI Plus: 100** · **Google AI Pro: 300**. Al contener **25 fuentes**, cualquier alumno puede abrirlo, consultarlo y **clonarlo** incluso con una cuenta gratuita.
 
-1. [Aprendizaje no supervisado, clustering y diferencias con el supervisado](#1-aprendizaje-no-supervisado-clustering-y-diferencias-con-el-supervisado)
-2. [Clustering particional (centroides) vs. clustering jerárquico](#2-clustering-particional-centroides-vs-clustering-jerárquico)
-3. [Clustering basado en densidad (DBSCAN)](#3-clustering-basado-en-densidad-dbscan)
-4. [Importancia de los hiperparámetros y evaluación de la calidad](#4-importancia-de-los-hiperparámetros-y-evaluación-de-la-calidad)
-5. [Análisis detallado de algoritmos de clustering](#5-análisis-detallado-de-algoritmos-de-clustering)
-   - [5.1. K-Means](#51-k-means)
-   - [5.2. Clustering Jerárquico (Aglomerativo)](#52-clustering-jerárquico-aglomerativo)
-   - [5.3. DBSCAN](#53-dbscan)
-   - [5.4. Gaussian Mixture Models (GMM)](#54-gaussian-mixture-models-gmm)
-   - [5.5. Tabla comparativa resumen](#55-tabla-comparativa-resumen)
-6. [Referencias](#6-referencias)
+### Índice rápido
+[1. No supervisado vs. Supervisado](#1-aprendizaje-no-supervisado-y-clustering) · [2. Particional vs. Jerárquico](#2-clustering-particional-centroides-vs-jerárquico) · [3. Densidad (DBSCAN)](#3-clustering-basado-en-densidad-dbscan) · [4. Hiperparámetros y Evaluación](#4-hiperparámetros-y-métricas-de-evaluación) · [5. Los 4 Algoritmos](#5-fichas-rápidas-de-algoritmos) · [6. Referencias](#6-referencias)
 
 ---
 
-## 1. Aprendizaje no supervisado, clustering y diferencias con el supervisado
+## 1. Aprendizaje no supervisado y clustering
 
-### ¿Qué es el aprendizaje no supervisado?
-El **aprendizaje no supervisado** (*unsupervised learning*) es una rama del *Machine Learning* en la que los algoritmos analizan conjuntos de **datos no etiquetados** (*unlabeled data*) sin supervisión humana previa. Su objetivo es descubrir patrones ocultos, relaciones latentes y estructuras naturales a partir de las similitudes y diferencias inherentes a las variables de entrada. Sus tres tareas fundamentales son el **clustering**, las **reglas de asociación** y la **reducción de dimensionalidad**.
+- **Aprendizaje no supervisado:** rama del *Machine Learning* que trabaja con **datos sin etiquetas** (*unlabeled data*) para descubrir patrones ocultos sin intervención humana.
+- **Clustering (agrupamiento):** técnica no supervisada que agrupa datos parecidos en **clústeres** (*alta similitud interna, baja similitud entre grupos*) y asigna un *cluster ID* a cada dato.
+  - ***Hard clustering* (rígido):** cada dato pertenece a **1 solo grupo** *(ej. K-Means)*.
+  - ***Soft clustering* (probabilístico):** cada dato tiene una **probabilidad de pertenencia** a varios grupos *(ej. GMM)*.
 
-### ¿Qué es un algoritmo de clustering?
-Un **algoritmo de clustering** (agrupamiento) organiza un conjunto de observaciones sin etiquetas en grupos llamados **clústeres**, de modo que los elementos dentro de un mismo clúster presenten una **alta similitud entre sí** (alta cohesión interna) y una **baja similitud con los elementos de otros clústeres** (alta separación). Como resultado, a cada observación se le asigna un identificador de grupo (*cluster ID*).
+```mermaid
+flowchart LR
+    subgraph SUP["Aprendizaje Supervisado"]
+        direction TB
+        S1["Datos CON etiquetas\n(ej. spam / no spam)"] --> S2["Modelo aprende\nla regla"] --> S3["Predice o clasifica\nnuevos datos"]
+    end
 
-Según cómo se asigna la pertenencia, existen dos modalidades principales:
-- **Agrupamiento rígido o exclusivo (*hard clustering*):** cada observación pertenece a un único clúster (por ejemplo, K-Means).
-- **Agrupamiento suave o probabilístico (*soft clustering*):** cada observación recibe un grado de pertenencia o probabilidad de pertenecer a cada clúster (por ejemplo, *Gaussian Mixture Models*).
+    subgraph UNSUP["Aprendizaje No Supervisado (Clustering)"]
+        direction TB
+        U1["Datos SIN etiquetas\n(solo variables)"] --> U2["Busca similitudes\ny densidad"] --> U3["Descubre grupos\nnaturales (Cluster ID)"]
+    end
 
-### Diferencias frente al aprendizaje supervisado
+    style S1 fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    style S2 fill:#bfdbfe,stroke:#2563eb,color:#1e3a8a
+    style S3 fill:#93c5fd,stroke:#1d4ed8,color:#1e3a8a
+    style U1 fill:#dcfce7,stroke:#16a34a,color:#14532d
+    style U2 fill:#bbf7d0,stroke:#16a34a,color:#14532d
+    style U3 fill:#86efac,stroke:#15803d,color:#14532d
+```
 
-| Criterio | Aprendizaje Supervisado | Aprendizaje No Supervisado (Clustering) |
+| Criterio | Supervisado | No Supervisado (Clustering) |
 | :--- | :--- | :--- |
-| **Datos de entrada** | **Datos etiquetados:** cada observación incluye variables predictoras (*features*) y una etiqueta objetivo conocida (*ground truth*), lo que suele requerir etiquetado humano previo. | **Datos no etiquetados:** solo existen variables de entrada (*features*), sin clases ni valores objetivo predefinidos. |
-| **Objetivo principal** | Aprender una función que relacione entradas y salidas para **predecir** valores futuros (regresión) o **clasificar** nuevas muestras en categorías conocidas. | **Descubrir estructuras subyacentes**, agrupaciones naturales, taxonomías o relaciones de proximidad presentes en los datos. |
-| **Evaluación** | Directa y determinista contra la etiqueta real mediante funciones de pérdida, *accuracy*, precisión, *recall* o error cuadrático. | Más compleja al carecer habitualmente de *ground truth*; se apoya en **métricas intrínsecas** (inercia, silueta, Davies-Bouldin, Calinski-Harabasz) e **interpretabilidad** en el dominio del problema (y solo en **métricas extrínsecas** como ARI o NMI cuando existen etiquetas de control). |
+| **Etiquetas** | **Sí** (*ground truth* conocido). | **No** (solo variables de entrada). |
+| **Objetivo** | **Predecir** un valor o clase futura. | **Descubrir** grupos y estructuras ocultas. |
+| **Evaluación** | Directa contra la etiqueta real (*accuracy*, error). | **Métricas internas** (Codo, Silueta) + **sentido de negocio**. |
 
-### Propósito del clustering y aplicaciones reales
-El propósito principal del clustering abarca cuatro ejes:
-1. **Descubrimiento de agrupaciones naturales:** identificar segmentos o categorías orgánicas en los datos y qué atributos los caracterizan.
-2. **Compresión y simplificación de datos:** resumir conjuntos complejos de características mediante un único *cluster ID*.
-3. **Preprocesamiento e imputación:** servir como fase previa para modelos posteriores o inferir valores faltantes a partir de observaciones vecinas del mismo grupo.
-4. **Preservación de la privacidad:** asociar comportamientos de usuarios a un identificador de grupo compartido en lugar de identificadores individuales.
+> [!IMPORTANT]
+> **¿Para qué sirve en el mundo real?** **Segmentar clientes** (marketing), **detectar anomalías/fraude**, **recomendar productos**, **agrupar noticias/documentos**, **segmentar imágenes** y **estratificar pacientes o secuencias genéticas**.
 
-Entre sus aplicaciones más frecuentes en el mundo real destacan la **segmentación de clientes y marketing** (*buyer personas* y campañas dirigidas), los **sistemas de recomendación y venta cruzada**, la **detección de anomalías y ciberseguridad** (fraude, fallos de equipos o tráfico atípico), la **segmentación y compresión de imágenes**, la **bioinformática e investigación clínica** (estratificación de pacientes, análisis genético y filogenético), la **agrupación temática de documentos/noticias** y la **detección de comunidades en redes sociales**.
+> 🎬 **Recurso visual:** [El CLUSTERING en el Machine Learning ¡EXPLICADO! — Codificando Bits (ES)](https://www.youtube.com/watch?v=A5sfobIi4Ag)
 
 ---
 
-## 2. Clustering particional (centroides) vs. clustering jerárquico
+## 2. Clustering particional (centroides) vs. jerárquico
 
-Ambos enfoques persiguen agrupar observaciones similares, pero parten de filosofías estructurales y computacionales muy distintas:
+Son dos formas opuestas de organizar los datos: **división plana rápida** frente a **árbol de grupos anidados**.
 
-| Dimensión | Clustering Particional (Basado en Centroides) | Clustering Jerárquico |
+```mermaid
+flowchart TD
+    subgraph KM["Particional por Centroides (ej. K-Means)"]
+        direction TB
+        K1["1. Fijas K centroides\n(k-means++)"] --> K2["2. Cada punto va al\ncentroide más cercano"]
+        K2 --> K3["3. Recalculas cada centroide\n(media del grupo)"]
+        K3 --> K4{"¿Se movieron?"}
+        K4 -- "Sí" --> K2
+        K4 -- "No" --> K5["Partición plana final\n(K grupos fijos)"]
+    end
+
+    subgraph HC["Jerárquico Aglomerativo (Bottom-Up)"]
+        direction TB
+        H1["1. Cada punto es su\npropio clúster (N)"] --> H2["2. Fusionas el par más cercano\nsegún enlace (linkage)"]
+        H2 --> H3{"¿Queda 1 solo\nclúster raíz?"}
+        H3 -- "No" --> H2
+        H3 -- "Sí" --> H4["Dendrograma completo\n(cortas a la altura deseada)"]
+    end
+
+    style K1 fill:#fef3c7,stroke:#d97706,color:#78350f
+    style K2 fill:#fde68a,stroke:#d97706,color:#78350f
+    style K3 fill:#fde68a,stroke:#d97706,color:#78350f
+    style K4 fill:#fed7aa,stroke:#ea580c,color:#7c2d12
+    style K5 fill:#fdba74,stroke:#c2410c,color:#7c2d12
+    style H1 fill:#ede9fe,stroke:#7c3aed,color:#4c1d95
+    style H2 fill:#ddd6fe,stroke:#7c3aed,color:#4c1d95
+    style H3 fill:#c4b5fd,stroke:#6d28d9,color:#4c1d95
+    style H4 fill:#a78bfa,stroke:#5b21b6,color:#ffffff
+```
+
+| Diferencia clave | Particional (Centroides) | Jerárquico |
 | :--- | :--- | :--- |
-| **Estructura resultante** | **Partición plana y no jerárquica:** divide $N$ observaciones en $K$ clústeres disjuntos representados por un centro o centroide. | **Árbol de clústeres anidados (jerarquía):** desde hojas individuales (*singletons*) hasta una única raíz global, sin imponer un único nivel de partición fijo. |
-| **Definición de $k$ a priori** | **Obligatorio** especificar $k$ antes de ejecutar el algoritmo. | **No es obligatorio** para construir la jerarquía; el número de clústeres se decide a posteriori cortando el árbol a la altura deseada. |
-| **Representación visual** | Regiones geométricas en el espacio de características (teselación de Voronoi en K-Means). | **Dendrograma:** diagrama arbóreo donde el eje vertical refleja la distancia o disimilitud de cada fusión o división. |
-| **Dirección del proceso** | Optimización iterativa global de una función objetivo (p. ej., minimizar distancias a centroides). | **Aglomerativo (*bottom-up*):** fusiona pares más cercanos desde $N$ clústeres hasta 1.<br>**Divisivo (*top-down*):** divide recursivamente desde 1 clúster global hasta $N$ hojas. |
-| **Criterio de similitud entre grupos** | Distancia directa entre cada observación y el centroide de cada grupo (habitualmente euclídea). | **Criterio de enlace (*linkage*):** *Ward* (minimiza incremento de varianza intra-clúster), *Complete* (distancia máxima), *Average* (distancia media entre todos los pares), *Single* (distancia mínima, propenso al efecto de encadenamiento o *chaining*) o *Centroid*. |
-| **Escalabilidad** | **Alta:** complejidad lineal $O(n)$ por iteración en K-Means (con variantes como *MiniBatchKMeans* para grandes volúmenes). | **Limitada en su forma estándar:** coste típico de $O(n^2)$ en tiempo y memoria por la matriz de distancias por pares (mejorable con restricciones de conectividad local). |
+| **Resultado** | **Partición plana** en $K$ grupos disjuntos. | **Árbol multinivel** (*dendrograma*) de grupos anidados. |
+| **¿Eliges $K$ antes?** | **Sí, obligatorio** antes de ejecutar. | **No:** construyes el árbol y luego eliges dónde cortar. |
+| **Enfoque** | Minimiza distancia a centros (inercia). | **Aglomerativo** (*bottom-up*, el más común) o **Divisivo** (*top-down*). |
+| **Criterio de unión** | Distancia punto → centroide. | ***Linkage*:** *Ward* (compactos), *Complete* (máx.), *Average* (media), *Single* (mín., riesgo de *chaining*). |
+| **Velocidad / Escala** | **Muy rápido** — $O(n)$ por iteración. | **Costoso** — $O(n^2)$ en tiempo y memoria. |
+| **Algoritmo tipo** | **K-Means** | **Clustering Jerárquico Aglomerativo** |
 
-### Algoritmos representativos
-
-- **Enfoque particional — K-Means (algoritmo de Lloyd):**
-  1. Fija $k$ y selecciona $k$ centroides iniciales (de forma aleatoria o mediante **k-means++**, que dispersa los centros iniciales para evitar mínimos locales pobres).
-  2. **Paso de asignación:** asigna cada punto al centroide más cercano (distancia euclídea).
-  3. **Paso de actualización:** recalcula cada centroide como la media aritmética de los puntos asignados a ese grupo.
-  4. Repite ambos pasos hasta que los centroides convergen o se alcanza el límite de iteraciones, minimizando la **inercia** (suma de distancias euclídeas al cuadrado dentro de cada clúster).
-
-- **Enfoque jerárquico — Clustering Jerárquico Aglomerativo (AGNES):**
-  1. Inicia considerando cada una de las $N$ observaciones como un clúster individual (*singleton*).
-  2. Calcula la matriz de disimilitud (distancias por pares: euclídea, Manhattan, coseno, etc.).
-  3. Fusiona de forma voraz (*greedy*) el par de clústeres con menor distancia según el criterio de *linkage* elegido (*Ward, complete, average* o *single*).
-  4. Actualiza la matriz de distancias y repite el paso anterior hasta obtener un único clúster raíz, dejando registrado todo el proceso en el **dendrograma**.
+> 🧪 **Pruébalo en directo:** [Simulador interactivo de K-Means — Naftali Harris](https://www.naftaliharris.com/blog/visualizing-k-means-clustering/)
+> 🎬 **Vídeos paso a paso:** [K-Means (Codificando Bits, ES)](https://www.youtube.com/watch?v=zZdPa7v321Y) · [K-Means (StatQuest, EN)](https://www.youtube.com/watch?v=4b5d3muPQmA) · [Dendrogramas (Código Máquina, ES)](https://www.youtube.com/watch?v=hyDOCXMmXxc) · [Hierarchical (StatQuest, EN)](https://www.youtube.com/watch?v=7xHsRkOdVwo)
 
 ---
 
 ## 3. Clustering basado en densidad (DBSCAN)
 
-El **clustering basado en densidad** define los clústeres como **regiones contiguas de alta densidad de puntos separadas por zonas de baja densidad o vacías**. En lugar de imponer formas esféricas o construir árboles de fusión, algoritmos como **DBSCAN** (*Density-Based Spatial Clustering of Applications with Noise*) expanden los grupos siguiendo la **conectividad por densidad** (*density-connectedness*).
+**DBSCAN** (*Density-Based Spatial Clustering of Applications with Noise*) define un clúster como una **región densa de puntos separada por zonas vacías**. Funciona con solo **2 hiperparámetros**:
 
-### Hiperparámetros clave de DBSCAN
-La definición formal de "región densa" depende de dos hiperparámetros:
-- **`eps` ($\varepsilon$):** radio de vecindad alrededor de un punto; fija la distancia máxima para considerar que otro punto es su vecino. Un `eps` demasiado pequeño marca casi todo como ruido, mientras que uno demasiado grande fusiona clústeres distintos en un único bloque. Suele estimarse con el gráfico de distancias al $k$-ésimo vecino más cercano ($k = \text{min\_samples} - 1$).
-- **`min_samples` ($MinPts$):** número mínimo de puntos requeridos dentro del radio $\varepsilon$ (incluyendo al propio punto) para que esa región sea considerada densa. Regula la tolerancia al ruido; valores altos exigen mayor concentración y suelen ser preferibles en datasets grandes o ruidosos (como heurística inicial se suele usar $MinPts \ge D + 1$ o $2 \cdot D$, siendo $D$ la dimensionalidad, con un mínimo de 3).
+- **`eps` ($\varepsilon$):** **radio** de vecindad alrededor de cada punto.
+- **`min_samples` ($MinPts$):** **mínimo de puntos** necesarios dentro del radio `eps` (incluido él mismo) para considerar la zona *densa*.
 
-### Clasificación de los puntos
-A partir de `eps` y `min_samples`, DBSCAN clasifica cada observación en una de tres categorías:
-1. **Puntos núcleo (*core points*):** tienen al menos `min_samples` puntos dentro de su vecindad de radio `eps`. Son el motor a partir del cual se expande cada clúster conectando puntos núcleo vecinos.
-2. **Puntos de borde (*border / non-core points*):** tienen menos de `min_samples` vecinos en su propio radio `eps`, pero caen dentro del radio `eps` de al menos un punto núcleo. Forman la periferia del clúster, pero no lo expanden.
-3. **Ruido o valores atípicos (*noise / outliers*):** puntos que no son núcleo ni son alcanzables por densidad desde ningún punto núcleo. En implementaciones estándar como scikit-learn reciben la etiqueta `-1`.
+```mermaid
+flowchart LR
+    P["Cada punto del dataset"] --> Q1{"¿Tiene >= min_samples\nvecinos en radio eps?"}
+    Q1 -- "Sí" --> CORE["Punto NÚCLEO (Core)\nExpande el clúster"]
+    Q1 -- "No" --> Q2{"¿Está a distancia <= eps\nde un punto núcleo?"}
+    Q2 -- "Sí" --> BORDER["Punto BORDE (Border)\nPeriferia, no expande"]
+    Q2 -- "No" --> NOISE["RUIDO / Outlier (-1)\nQueda aislado"]
 
-### Diferencias frente al clustering por centroides y al jerárquico
+    style P fill:#f1f5f9,stroke:#475569,color:#0f172a
+    style Q1 fill:#e2e8f0,stroke:#475569,color:#0f172a
+    style Q2 fill:#e2e8f0,stroke:#475569,color:#0f172a
+    style CORE fill:#bbf7d0,stroke:#16a34a,color:#14532d
+    style BORDER fill:#bfdbfe,stroke:#2563eb,color:#1e3a8a
+    style NOISE fill:#fecaca,stroke:#dc2626,color:#7f1d1d
+```
 
-| Aspecto | Basado en Densidad (DBSCAN) | Basado en Centroides (K-Means) | Jerárquico (Aglomerativo) |
+### ¿En qué se diferencia de Centroides y Jerárquico?
+
+| Aspecto | DBSCAN (Densidad) | K-Means (Centroides) | Jerárquico |
 | :--- | :--- | :--- | :--- |
-| **Forma de los clústeres** | Detecta **formas arbitrarias, no convexas, alargadas o concéntricas**. | Asume clústeres **convexos e isotrópicos** (esféricos); falla en geometrías complejas. | Depende del *linkage*: *Ward* y *Complete* favorecen formas compactas/globulares; *Single* detecta formas no globulares, pero sufre efecto de encadenamiento (*chaining*). |
-| **Número de clústeres ($k$)** | **No requiere fijar $k$ a priori**; surge automáticamente de la densidad local. | **Requiere definir $k$ obligatoriamente** antes de entrenar. | No lo requiere para construir el árbol, pero sí para definir el corte final del dendrograma. |
-| **Manejo de ruido y *outliers*** | **Nativo y robusto:** aísla explícitamente los atípicos como ruido (`-1`). | **Particionamiento forzoso:** todo punto se asigna a un centroide, por lo que los *outliers* desplazan la media y deforman los grupos. | Asigna todos los puntos al árbol; el ruido puede crear puentes artificiales entre grupos (especialmente en *single linkage*). |
-| **Densidades variables** | **Principal debilidad:** al usar un único umbral global (`eps`, `min_samples`), tiene dificultades severas si coexisten clústeres muy densos y muy dispersos (lo que motiva extensiones como OPTICS o HDBSCAN). | También sufre con tamaños y densidades muy dispares, sesgando centroides hacia clústeres más grandes. | El dendrograma permite inspeccionar agrupaciones a múltiples escalas de distancia, aunque *Ward* tiende a equilibrar tamaños. |
+| **Formas que detecta** | **Cualquier forma** (lunas, anillos, curvas). | Solo **esféricas / convexas**. | Depende del *linkage* (*Ward* = compactas). |
+| **¿Pide $K$ antes?** | **No**, descubre cuántos grupos hay solo. | **Sí**, obligatorio. | No para el árbol, sí para el corte. |
+| **Ruido / *Outliers*** | **Los aísla nativamente (`-1`)**. | Los mete a la fuerza y **deforman el centroide**. | Pueden unir grupos por error (*single linkage*). |
+
+> [!WARNING]
+> **Punto débil de DBSCAN:** al usar un único `eps` global, **sufre si hay clústeres con densidades muy distintas** entre sí *(para eso existen OPTICS o HDBSCAN)*.
+
+> 🧪 **Pruébalo en directo:** [Simulador interactivo de DBSCAN — Naftali Harris](https://www.naftaliharris.com/blog/visualizing-dbscan-clustering/)
+> 🎬 **Vídeos paso a paso:** [DBSCAN paso a paso (Código Máquina, ES)](https://www.youtube.com/watch?v=HMis89lGdkA) · [DBSCAN Clearly Explained (StatQuest, EN)](https://www.youtube.com/watch?v=RDZUdRSDOok)
 
 ---
 
-## 4. Importancia de los hiperparámetros y evaluación de la calidad
+## 4. Hiperparámetros y métricas de evaluación
 
-### ¿Por qué es crítica la elección de $k$ y de los hiperparámetros?
-Al no disponer de etiquetas de referencia (*ground truth*) que corrijan el entrenamiento, la estructura descubierta depende directamente de los hiperparámetros elegidos:
-- **En K-Means y GMM:** un valor de $k$ (o `n_components`) demasiado bajo fusiona subgrupos heterogéneos y oculta estructura real; un valor demasiado alto sobresegmenta grupos naturales en particiones artificiales. En GMM, además, el tipo de covarianza (*spherical, tied, diag, full*) controla la flexibilidad geométrica y evita singularidades o sobreajuste.
-- **En DBSCAN:** una mala calibración de `eps` y `min_samples` puede colapsar todo el dataset en ruido (`-1`) o en un único megaclúster sin valor analítico.
-- **En Jerárquico Aglomerativo:** el criterio de *linkage* y la métrica de distancia determinan radicalmente la geometría y sensibilidad al ruido del dendrograma resultante.
+### ¿Por qué es tan crítico elegir bien $K$ o los hiperparámetros?
+Sin etiquetas reales que corrijan el error, **los hiperparámetros definen el resultado**:
+- **$K$ muy bajo:** mezcla grupos diferentes (*subsegmentación*). **$K$ muy alto:** parte en trozos artificiales un grupo natural (*sobresegmentación*).
+- **`eps` muy pequeño en DBSCAN:** todo acaba etiquetado como ruido (`-1`). **`eps` muy grande:** todo se fusiona en **1 solo megaclúster**.
 
-### Métodos de evaluación de la calidad del agrupamiento
+### Dos métricas clave que debes dominar primero
 
-Al no existir etiquetas reales en escenarios típicos, se utilizan **métricas intrínsecas (internas)** basadas únicamente en los datos y las asignaciones obtenidas:
+| Método / Métrica | Qué mide exactamente | Cómo interpretarlo | Cuidado con... |
+| :--- | :--- | :--- | :--- |
+| **1. Método del Codo** *(usa **Inercia / WCSS**)* | Suma de distancias al cuadrado de cada punto a su centroide *(compacidad interna)*: $\text{Inercia} = \sum_{i} \|x_i - \mu_j\|^2$ | Graficas Inercia vs. $K$ y buscas el **"codo"** donde la curva deja de bajar rápido y se aplana. | Siempre baja hasta `0` cuando $K = N$; en datos reales el codo puede ser **subjetivo**. |
+| **2. Coeficiente de Silueta** *(Silhouette Score)* | Compara **cohesión interna** ($a$, distancia a tu grupo) vs. **separación** ($b$, distancia al grupo vecino): $s = \frac{b - a}{\max(a, b)}$ | Rango **$[-1, +1]$**: cuanto más cerca de **`+1`**, mejor agrupado y separado. | Favorece grupos **convexos** (suele puntuar peor a DBSCAN en formas raras). |
 
-#### 1. Método del Codo (*Elbow Method*) — basado en Inercia (WCSS / SSE)
-- **Métrica subyacente (Inercia):** suma de las distancias euclídeas al cuadrado desde cada observación $x_i$ hasta el centroide $\mu_j$ de su clúster asignado (*Within-Cluster Sum of Squares*):
+**Escala rápida del Coeficiente de Silueta:**
 
-$$\text{Inercia (WCSS)} = \sum_{i=0}^{N-1} \min_{\mu_j \in C} \left( \|x_i - \mu_j\|^2 \right)$$
+| Valor de Silueta | Significado visual |
+| :---: | :--- |
+| 🔴 **Cerca de `-1`** | **Mal asignado:** el punto está más cerca de otro clúster que del suyo. |
+| 🟡 **Cerca de `0`** | **En la frontera:** clústeres solapados o ambiguos. |
+| 🟢 **Cerca de `+1`** | **Óptimo:** clúster compacto y claramente separado de los vecinos. |
 
-- **Funcionamiento:** se entrena el algoritmo (típicamente K-Means) para distintos valores de $k$ y se grafica la inercia frente a $k$. Como la inercia disminuye siempre de forma monotónica conforme aumenta $k$ (hasta llegar a 0 cuando $k = N$), se busca el punto de inflexión o **"codo"** donde la ganancia marginal de reducir la dispersión interna se estabiliza notablemente.
-- **Limitaciones:** no es una métrica normalizada, asume clústeres convexos e isotrópicos, se ve afectada por la maldición de la dimensionalidad en espacios de alta dimensión y, en datos reales, el "codo" suele ser suave o subjetivo.
+> [!TIP]
+> **Regla práctica de principiante:** no confíes solo en el Codo; **combina Codo + Silueta** (y revisa si los grupos tienen sentido para el negocio).
+> *Otras métricas útiles más adelante:* **Calinski-Harabasz** *(mayor = mejor)*, **Davies-Bouldin** *(cerca de 0 = mejor)* y **BIC / AIC** *(menor = mejor, estándar en GMM)*.
 
-#### 2. Coeficiente de Silueta (*Silhouette Score / Analysis*)
-- **Fundamento (Cohesión vs. Separación):** evalúa simultáneamente qué tan compacto es el clúster al que pertenece una muestra $i$ y qué tan separada está del clúster vecino más próximo:
-  - $a(i)$: distancia media entre el punto $i$ y todos los demás puntos de **su mismo clúster** (**cohesión intra-clúster**; menor es mejor).
-  - $b(i)$: distancia media entre el punto $i$ y todos los puntos del **clúster vecino más cercano** al que no pertenece (**separación inter-clúster**; mayor es mejor).
-- **Fórmula:**
-
-$$s(i) = \frac{b(i) - a(i)}{\max\big(a(i),\, b(i)\big)}$$
-
-  El **Silhouette Score** global es la media de $s(i)$ sobre todas las muestras del conjunto de datos.
-- **Rango e interpretación ($[-1, 1]$):**
-  - **Cercano a $+1$:** muestra muy bien agrupada en su clúster y bien separada de los vecinos.
-  - **Cercano a $0$:** muestra sobre o muy próxima a la frontera de decisión entre dos clústeres (solapamiento).
-  - **Valores negativos (hasta $-1$):** probable asignación incorrecta (el punto está en promedio más cerca de un clúster vecino que del suyo).
-- **Ventaja del análisis visual:** el diagrama de siluetas permite inspeccionar además el grosor (tamaño) y la uniformidad de cada clúster individual para descartar valores de $k$ con clústeres por debajo del promedio o con puntuaciones negativas. Como precaución, tiende a favorecer clústeres convexos frente a clústeres de formas arbitrarias como los de DBSCAN.
-
-#### Otras métricas internas complementarias
-- **Índice de Calinski-Harabasz (*Variance Ratio Criterion*):** cociente entre la dispersión entre clústeres y la dispersión intra-clúster; es rápido de calcular y **valores más altos** indican clústeres más densos y mejor separados.
-- **Índice de Davies-Bouldin:** mide la similitud promedio entre cada clúster y su clúster más parecido (comparando dispersiones internas frente a la distancia entre centroides); su mínimo es `0` y **valores más cercanos a 0** reflejan mejor partición.
-- **Criterios de información BIC y AIC (específicos para GMM):** equilibran la log-verosimilitud del modelo con una penalización por complejidad (número de parámetros), permitiendo seleccionar simultáneamente `n_components` y el tipo de covarianza buscando el **valor mínimo de BIC/AIC**.
+> 🎬 **Vídeos y gráficos:** [Métricas Silueta y Davies-Bouldin (Código Máquina, ES)](https://www.youtube.com/watch?v=b920s9nXGao) · [Análisis visual de Silueta — scikit-learn](https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html)
 
 ---
 
-## 5. Análisis detallado de algoritmos de clustering
+## 5. Fichas rápidas de algoritmos
 
 ### 5.1. K-Means
-- **Mecanismo de funcionamiento:** algoritmo particional de agrupamiento rígido (*hard clustering*) que divide $N$ observaciones en $K$ clústeres minimizando la **inercia** (WCSS). A través del algoritmo de Lloyd alterna de forma iterativa dos pasos —asignar cada punto al centroide más cercano (distancia euclídea) y recalcular cada centroide como la media de sus puntos— hasta converger. Suele combinarse con inicialización **k-means++** para evitar mínimos locales desfavorables.
-- **Ventajas:**
-  - Muy eficiente y escalable: complejidad lineal $O(n)$ por iteración, paralelizable y extensible a datos masivos mediante *MiniBatchKMeans*.
-  - Sencillo de implementar, interpretar y aplicar en espacios continuos.
-- **Desventajas:**
-  - Requiere fijar $K$ *a priori* y converge a mínimos locales dependientes de la inicialización.
-  - Asume clústeres convexos, esféricos y de varianza similar; falla con formas alargadas o no lineales.
-  - Muy sensible a *outliers* (distorsionan las medias) y a la maldición de la dimensionalidad si no se escalan o reducen las variables.
-- **Casos de uso comunes:** segmentación de clientes y mercados, compresión de imágenes y cuantización vectorial, y agrupación de documentos de texto a gran escala.
+- **Cómo funciona:** *hard clustering* que minimiza la **inercia** alternando: *(1)* asignar cada punto al centroide más cercano y *(2)* recalcular el centroide como la media del grupo *(con inicialización `k-means++`)*.
+- **✅ Ventajas:** muy rápido y escalable ($O(n)$, admite *MiniBatchKMeans*); simple e intuitivo.
+- **⚠️ Desventajas:** exige fijar **$K$**, solo funciona bien con **formas esféricas**, muy sensible a ***outliers*** y a escalas sin normalizar.
+- **🎯 Cuándo usarlo:** segmentación de clientes, compresión de imágenes, datasets grandes numéricos.
+- 🎬 **Ver visual:** [Simulador K-Means](https://www.naftaliharris.com/blog/visualizing-k-means-clustering/) · [StatQuest](https://www.youtube.com/watch?v=4b5d3muPQmA)
 
 ### 5.2. Clustering Jerárquico (Aglomerativo)
-- **Mecanismo de funcionamiento:** enfoque ascendente (*bottom-up*) que comienza con cada observación en su propio clúster y fusiona iterativamente el par de clústeres más cercanos según una matriz de disimilitud y un criterio de **enlace (*linkage*)** (*Ward*, *Complete*, *Average* o *Single*), hasta converger en un único clúster raíz. La secuencia de fusiones se representa en un **dendrograma**, que puede cortarse a cualquier altura. Admite además matrices de conectividad local para respetar estructuras de variedades.
-- **Ventajas:**
-  - No exige fijar $K$ por adelantado y proporciona una visión multiescala completa mediante el dendrograma.
-  - Con enlaces como *single*, *complete* o *average* admite métricas no euclídeas (Manhattan $L_1$, coseno, etc.).
-  - Las restricciones de conectividad permiten capturar geometrías complejas y reducir el coste computacional.
-- **Desventajas:**
-  - Alto coste computacional y de memoria en su versión estándar ($O(n^2)$), poco práctico para conjuntos muy grandes sin restricciones de conectividad.
-  - Decisiones voraces (*greedy*) e irreversibles: una fusión temprana errónea no puede deshacerse.
-  - *Single linkage* es muy vulnerable al ruido y al efecto de encadenamiento (*chaining effect*); otros enlaces pueden producir clústeres desequilibrados.
-- **Casos de uso comunes:** bioinformática, genómica y análisis filogenético/taxonómico, estratificación clínica de cohortes de pacientes y aglomeración de variables (*feature agglomeration*) para reducir dimensionalidad.
+- **Cómo funciona:** enfoque *bottom-up* que empieza con cada punto aislado y fusiona iterativamente el par más cercano según el criterio de ***linkage*** (*Ward, Complete, Average, Single*) hasta crear un **dendrograma**.
+- **✅ Ventajas:** **no exige elegir $K$ de antemano**; visión multiescala en árbol; admite varias métricas de distancia (*Manhattan, coseno*).
+- **⚠️ Desventajas:** **lento y pesado en memoria** ($O(n^2)$); decisiones *greedy* irreversibles; *single linkage* sufre encadenamiento con ruido.
+- **🎯 Cuándo usarlo:** datasets pequeños/medianos, bioinformática y taxonomías, agrupación de variables (*feature agglomeration*).
+- 🎬 **Ver visual:** [Dendrogramas — Código Máquina (ES)](https://www.youtube.com/watch?v=hyDOCXMmXxc) · [StatQuest (EN)](https://www.youtube.com/watch?v=7xHsRkOdVwo)
 
 ### 5.3. DBSCAN
-- **Mecanismo de funcionamiento:** algoritmo basado en densidad (*Density-Based Spatial Clustering of Applications with Noise*) que agrupa observaciones conectadas en regiones densas definidas por `eps` (radio de vecindad) y `min_samples` (mínimo de puntos en ese radio). Identifica **puntos núcleo** (que expanden clústeres por conectividad por densidad), **puntos de borde** (en el radio de un núcleo, sin expandir) y **ruido / *outliers*** (etiquetados como `-1`).
-- **Ventajas:**
-  - Descubre clústeres de formas arbitrarias, cóncavas o concéntricas sin asumir esfericidad.
-  - No requiere especificar el número de clústeres $K$ de antemano.
-  - Detecta y aísla de forma nativa el ruido y los *outliers*.
-  - Con estructuras espaciales (*k-d trees* o *ball trees*) alcanza una complejidad media de $O(n \log n)$.
-- **Desventajas:**
-  - Dificultades severas cuando el dataset contiene clústeres con **densidades muy diferentes** entre sí.
-  - Alta sensibilidad a la elección de `eps` y `min_samples`.
-  - Los puntos de borde alcanzables por dos clústeres distintos pueden cambiar de asignación según el orden de los datos.
-  - Pierde eficacia en espacios de muy alta dimensión por la degradación de las distancias euclídeas.
-- **Casos de uso comunes:** detección de anomalías y filtrado de ruido, análisis de datos geoespaciales y trayectorias (con métricas como *great-circle distance*), y segmentación de regiones complejas en visión artificial.
+- **Cómo funciona:** agrupa regiones densas conectando **puntos núcleo** definidos por **`eps`** y **`min_samples`**, dejando márgenes como **borde** y puntos aislados como **ruido (`-1`)**.
+- **✅ Ventajas:** detecta **formas arbitrarias** (curvas, anillos), **no pide $K$**, aísla ***outliers*** automáticamente, rápido con índices espaciales ($O(n \log n)$).
+- **⚠️ Desventajas:** falla con **densidades muy distintas**, sensible a elegir bien `eps`, pierde fuerza en muy alta dimensión.
+- **🎯 Cuándo usarlo:** datos geoespaciales, detección de anomalías/ruido, formas complejas no esféricas.
+- 🎬 **Ver visual:** [Simulador DBSCAN](https://www.naftaliharris.com/blog/visualizing-dbscan-clustering/) · [Código Máquina (ES)](https://www.youtube.com/watch?v=HMis89lGdkA)
 
 ### 5.4. Gaussian Mixture Models (GMM)
-- **Mecanismo de funcionamiento:** modelo probabilístico generativo de agrupamiento suave (**soft clustering**) que asume que los datos proceden de una combinación finita de distribuciones gaussianas multivariadas. En lugar de asignar cada punto a un único grupo de forma rígida, realiza una **asignación probabilística** (responsabilidades) que cuantifica la probabilidad de que cada observación haya sido generada por cada componente. Sus parámetros (pesos, medias y matrices de covarianza) se estiman iterativamente con el algoritmo **Expectation-Maximization (EM)**:
-  - **Paso E (*Expectation*):** calcula las probabilidades posteriores de pertenencia de cada dato a cada gaussiana.
-  - **Paso M (*Maximization*):** actualiza medias, pesos y matrices de covarianza para maximizar la log-verosimilitud.
-  
-  Generaliza a K-Means al permitir covarianzas *spherical*, *diag*, *tied* o *full* (modelando elipsoides con orientación y tamaño flexibles).
-- **Ventajas:**
-  - **Asignación probabilística (*soft clustering*):** captura incertidumbre y solapamiento natural entre grupos.
-  - Modela clústeres elípticos de distintas formas, tamaños y orientaciones gracias a las matrices de covarianza.
-  - Permite seleccionar el número de componentes y el tipo de covarianza de forma fundamentada mediante **BIC/AIC** (o inferirlo automáticamente con la variante bayesiana *BayesianGaussianMixture*).
-- **Desventajas:**
-  - Riesgo de **singularidades matemáticas** en matrices de covarianza si una componente tiene muy pocas muestras (requiere regularización).
-  - Asume que las distribuciones subyacentes son aproximadamente gaussianas; puede desajustarse ante geometrías no gaussianas.
-  - Mayor coste computacional que K-Means, especialmente en alta dimensión con covarianza *full*.
-  - Converge a mínimos locales según la inicialización de sus centros.
-- **Casos de uso comunes:** estimación de densidad y generación sintética de muestras, segmentación de perfiles o contenidos con solapamiento natural (intereses híbridos) y detección probabilística de anomalías (observaciones con densidad conjunta muy baja).
+- **Cómo funciona:** modelo probabilístico (**soft clustering**) que asume que los datos nacen de una mezcla de **distribuciones gaussianas**. Usa el algoritmo **EM (*Expectation-Maximization*)** para calcular la **probabilidad de pertenencia** de cada punto a cada clúster y ajustar medias y **matrices de covarianza** (*spherical, diag, tied, full*).
+- **✅ Ventajas:** da **probabilidades** (maneja grupos solapados), modela **elipses estiradas y rotadas**, permite elegir $K$ con **BIC/AIC**.
+- **⚠️ Desventajas:** asume forma gaussiana, más costoso que K-Means, riesgo de **singularidades** si un grupo tiene muy pocos datos.
+- **🎯 Cuándo usarlo:** grupos elípticos o solapados (perfiles híbridos), estimación de densidad, detección probabilística de anomalías.
+- 🎬 **Ver visual:** [Luis Serrano Academy (EN)](https://www.youtube.com/watch?v=q71Niz856KE) · [DataMListic Animado (EN)](https://www.youtube.com/watch?v=wT2yLNUfyoM)
 
 ---
 
-### 5.5. Tabla comparativa resumen
+### 5.5. Comparativa de un vistazo y guía rápida de elección
 
-| Algoritmo | Enfoque y asignación | Hiperparámetros principales | ¿Requiere $K$ a priori? | Formas de clúster | Manejo de *outliers* | Escalabilidad típica | Casos de uso destacados |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **K-Means** | Particional por centroides (*hard*) | `n_clusters` ($K$), inicialización (*k-means++*) | **Sí** | Convexas / esféricas de varianza similar | Bajo (distorsionan centroides) | **Muy alta** — $O(n)$ por iteración (*MiniBatch*) | Segmentación de clientes, compresión de imágenes, minería de texto |
-| **Jerárquico Aglomerativo** | Jerárquico *bottom-up* (*hard* por corte) | `linkage` (*Ward, complete, average, single*), métrica de distancia, conectividad | **No** *(se elige al cortar el dendrograma)* | Globulares (*Ward/Complete*) o no globulares (*Single*, con riesgo de *chaining*) | Bajo–moderado (sensible en *single linkage*) | **Baja–media** — $O(n^2)$ sin conectividad | Bioinformática/filogenética, cohortes clínicas, *feature agglomeration* |
-| **DBSCAN** | Basado en densidad (*hard* + ruido) | `eps` ($\varepsilon$), `min_samples` ($MinPts$), métrica de distancia | **No** | **Arbitrarias**, no convexas, concéntricas | **Excelente** (etiqueta ruido como `-1`) | **Media–alta** — $O(n \log n)$ con índices espaciales | Detección de anomalías, datos geoespaciales, visión artificial |
-| **GMM** | Probabilístico generativo (*soft*) | `n_components`, `covariance_type` (*full, tied, diag, spherical*) | **Sí** *(orientable con BIC/AIC o variante bayesiana)* | Elipsoides con orientación y tamaño flexibles | Moderado (modelable vía baja densidad) | **Media** (costoso en alta dimensión con `full`) | Estimación de densidad, segmentación difusa solapada, anomalías probabilísticas |
+| Algoritmo | Tipo | ¿Pide $K$? | Formas | *Outliers* | Velocidad |
+| :--- | :--- | :---: | :--- | :--- | :--- |
+| **K-Means** | Centroides (*hard*) | **Sí** | Esféricas | 🔴 Muy sensible | ⚡ Muy alta — $O(n)$ |
+| **Aglomerativo** | Jerárquico (*árbol*) | **No** *(al cortar)* | Compactas (*Ward*) | 🟡 Sensible (*single*) | 🐢 Baja — $O(n^2)$ |
+| **DBSCAN** | Densidad (*hard* + ruido) | **No** | **Arbitrarias** | 🟢 **Excelente (`-1`)** | 🚀 Media-alta — $O(n \log n)$ |
+| **GMM** | Probabilístico (*soft*) | **Sí** *(BIC/AIC)* | **Elipses** / solapadas | 🟡 Vía baja densidad | ⚙️ Media (EM) |
+
+```mermaid
+flowchart TD
+    START["¿Qué algoritmo de clustering pruebo primero?"] --> Q1{"¿Hay formas raras\no mucho ruido/outliers?"}
+    Q1 -- "Sí" --> A_DB["DBSCAN\n(formas arbitrarias + ruido -1)"]
+    Q1 -- "No" --> Q2{"¿Los grupos se solapan\no necesitas probabilidades?"}
+    Q2 -- "Sí" --> A_GMM["GMM\n(soft clustering + elipses)"]
+    Q2 -- "No" --> Q3{"¿Dataset pequeño/medio y\nquieres explorar un árbol sin fijar K?"}
+    Q3 -- "Sí" --> A_HC["Jerárquico Aglomerativo\n(dendrograma + Ward)"]
+    Q3 -- "No" --> A_KM["K-Means\n(rápido, escalable, baseline)"]
+
+    style START fill:#f1f5f9,stroke:#334155,color:#0f172a
+    style A_DB fill:#bbf7d0,stroke:#16a34a,color:#14532d
+    style A_GMM fill:#fbcfe8,stroke:#db2777,color:#831843
+    style A_HC fill:#ddd6fe,stroke:#7c3aed,color:#4c1d95
+    style A_KM fill:#fde68a,stroke:#d97706,color:#78350f
+```
+
+> 📊 **Comparación visual definitiva:** [Matriz de 6 geometrías × algoritmos (scikit-learn)](https://scikit-learn.org/stable/auto_examples/cluster/plot_cluster_comparison.html) · [Algoritmos paso a paso con GIFs (David Sheehan)](https://dashee87.github.io/data%20science/general/Clustering-with-Scikit-with-GIFs/)
 
 ---
 
 ## 6. Referencias
 
-Fuentes técnicas oficiales consultadas y sintetizadas mediante NotebookLM:
-
-- scikit-learn Documentation — [2.3. Clustering](https://scikit-learn.org/stable/modules/clustering.html)
-- scikit-learn Documentation — [2.1. Gaussian mixture models](https://scikit-learn.org/stable/modules/mixture.html)
-- scikit-learn Documentation — [Selecting the number of clusters with silhouette analysis on KMeans clustering](https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html)
-- scikit-learn Documentation — [Demo of DBSCAN clustering algorithm](https://scikit-learn.org/stable/auto_examples/cluster/plot_dbscan.html)
-- scikit-learn Documentation — [Gaussian Mixture Model Selection (BIC)](https://scikit-learn.org/stable/auto_examples/mixture/plot_gmm_selection.html)
-- Google for Developers (ML Crash Course) — [Supervised Learning](https://developers.google.com/machine-learning/intro-to-ml/supervised)
-- Google for Developers (ML Crash Course) — [What is clustering?](https://developers.google.com/machine-learning/clustering/overview)
-- Google for Developers (ML Crash Course) — [Clustering algorithms](https://developers.google.com/machine-learning/clustering/clustering-algorithms)
-- IBM Think — [What Is Unsupervised Learning?](https://www.ibm.com/think/topics/unsupervised-learning)
-- IBM Think — [What is clustering?](https://www.ibm.com/think/topics/clustering)
-- IBM Think — [What is k-means clustering?](https://www.ibm.com/think/topics/k-means-clustering)
-- IBM Think — [What is Hierarchical Clustering?](https://www.ibm.com/think/topics/hierarchical-clustering)
-- Wikipedia — [DBSCAN](https://en.wikipedia.org/wiki/DBSCAN)
+- **Documentación oficial (13 fuentes en NotebookLM):** [scikit-learn Clustering](https://scikit-learn.org/stable/modules/clustering.html) · [scikit-learn GMM](https://scikit-learn.org/stable/modules/mixture.html) · [Silhouette Analysis](https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html) · [Demo DBSCAN](https://scikit-learn.org/stable/auto_examples/cluster/plot_dbscan.html) · [GMM Selection (BIC)](https://scikit-learn.org/stable/auto_examples/mixture/plot_gmm_selection.html) · [Google ML Supervised](https://developers.google.com/machine-learning/intro-to-ml/supervised) · [Google ML Clustering](https://developers.google.com/machine-learning/clustering/overview) · [Google ML Algorithms](https://developers.google.com/machine-learning/clustering/clustering-algorithms) · [IBM Unsupervised](https://www.ibm.com/think/topics/unsupervised-learning) · [IBM Clustering](https://www.ibm.com/think/topics/clustering) · [IBM K-Means](https://www.ibm.com/think/topics/k-means-clustering) · [IBM Hierarchical](https://www.ibm.com/think/topics/hierarchical-clustering) · [Wikipedia DBSCAN](https://en.wikipedia.org/wiki/DBSCAN)
+- **Vídeos y guías visuales (12 fuentes en NotebookLM + 2 simuladores):** [Codificando Bits (Clustering)](https://www.youtube.com/watch?v=A5sfobIi4Ag) · [Codificando Bits (K-Means)](https://www.youtube.com/watch?v=zZdPa7v321Y) · [Código Máquina (Jerárquico)](https://www.youtube.com/watch?v=hyDOCXMmXxc) · [Código Máquina (DBSCAN)](https://www.youtube.com/watch?v=HMis89lGdkA) · [Código Máquina (Silueta)](https://www.youtube.com/watch?v=b920s9nXGao) · [StatQuest (K-Means)](https://www.youtube.com/watch?v=4b5d3muPQmA) · [StatQuest (Hierarchical)](https://www.youtube.com/watch?v=7xHsRkOdVwo) · [StatQuest (DBSCAN)](https://www.youtube.com/watch?v=RDZUdRSDOok) · [Luis Serrano (GMM)](https://www.youtube.com/watch?v=q71Niz856KE) · [DataMListic (GMM)](https://www.youtube.com/watch?v=wT2yLNUfyoM) · [scikit-learn Cluster Comparison](https://scikit-learn.org/stable/auto_examples/cluster/plot_cluster_comparison.html) · [Clustering with GIFs](https://dashee87.github.io/data%20science/general/Clustering-with-Scikit-with-GIFs/) · [Simulador K-Means](https://www.naftaliharris.com/blog/visualizing-k-means-clustering/) · [Simulador DBSCAN](https://www.naftaliharris.com/blog/visualizing-dbscan-clustering/)
