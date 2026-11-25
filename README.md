@@ -175,6 +175,29 @@ flowchart LR
 
 El taller se resuelve **por fases de un proyecto de datos** (Comprender → Preparar → Explorar → Modelar → Evaluar → Interpretar), con **una branch por fase**. Primero 🍄 Setas y después 💳 Tarjetas.
 
+### 🔁 Método de aprendizaje: cada fase se gana respondiendo
+
+1. **Claude resuelve la fase** en el notebook de trabajo y la explica paso a paso.
+2. **Yo la pruebo en VS Code:** *Run All*, miro los resultados y cambio cosas para ver qué pasa.
+3. **Respondo las preguntas de control** de la fase.
+4. **Si respondo bien** → commit, merge a `main`, **push a GitHub** y siguiente fase.
+   **Si no** → Claude me hace **más preguntas** (más sencillas o desde otro ángulo) hasta que lo entiendo. No se avanza sin entender.
+
+```mermaid
+flowchart LR
+    A[Claude resuelve<br/>y explica] --> B[Pruebo en<br/>VS Code]
+    B --> C{¿Respondo bien<br/>las preguntas?}
+    C -- Sí --> D[Commit + push<br/>→ siguiente fase]
+    C -- No --> E[Más preguntas]
+    E --> C
+
+    style A fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    style B fill:#fde68a,stroke:#d97706,color:#78350f
+    style C fill:#ddd6fe,stroke:#7c3aed,color:#4c1d95
+    style D fill:#bbf7d0,stroke:#16a34a,color:#14532d
+    style E fill:#fecaca,stroke:#dc2626,color:#7f1d1d
+```
+
 | Qué | Dónde |
 |---|---|
 | 📋 Enunciado del taller | [`docs/workshop/README.md`](docs/workshop/README.md) |
