@@ -4,7 +4,7 @@ El taller sigue las **fases de un proyecto de datos**. Cada fase es **una branch
 
     Comprender → Preparar → Explorar → Modelar → Evaluar → Interpretar → Entregar
 
-Se trabaja en los notebooks de la **raíz** (`workshop-setas.ipynb`, `workshop-tarjetas.ipynb`), que solo tienen las fases ya vistas. Las plantillas de [`docs/workshop/`](docs/workshop/README.md) quedan como enunciado.
+Se trabaja en los notebooks de la **raíz** (`workshop-setas.ipynb`, `workshop-tarjetas.ipynb`), que **solo muestran la fase actual**: las anteriores quedan como un título con su resumen y su código plegado en una celda (se ejecuta, pero no se ve). Las plantillas de [`docs/workshop/`](docs/workshop/README.md) quedan como enunciado.
 
 ## 🔁 Ciclo de cada branch
 1. **Claude** crea la branch desde `main`, añade al notebook las celdas de esa fase y las ejecuta con `uv`.
@@ -22,7 +22,7 @@ Problema: ¿se agrupan solas las setas en comestibles y venenosas? La etiqueta `
 | # | Branch | Fase | Qué se hace | Salida esperada | ❓ Preguntas de control |
 |---|---|---|---|---|---|
 | 01 | `01-setas-comprension` | Comprender | Carga, `describe`, `info`, nulos | 8124 × 23, todo texto, 0 nulos *aparentes* | ¿Supervisado o no supervisado? ¿Para qué sirve aquí la etiqueta? |
-| 02 | `02-setas-preparacion` | Preparar | `'?'` → moda, quitar `veil-type`, `X`/`y`, One-Hot (`get_dummies`), train/test | `?` = 2480 en `stalk-root`; ~116 columnas | ¿Por qué `isnull()` no vio los `'?'`? ¿Por qué One-Hot? |
+| 02 | `02-setas-preparacion` | Preparar | `'?'` → moda, quitar `veil-type`, `X`/`y`, One-Hot (`get_dummies`), train/test | `?` = 2480 en `stalk-root`; 115 columnas | ¿Por qué `isnull()` no vio los `'?'`? ¿Por qué One-Hot? |
 | 03 | `03-setas-exploracion` | Explorar | PCA 2D, Random Forest como línea base, nº de componentes, t-SNE | Grupos separados; RF ≈ 100 %; ~10 componentes bastan | ¿Qué es una componente principal? ¿Por qué t-SNE solo sirve para visualizar? |
 | 04 | `04-setas-modelado` | Modelar | K-Means (codo + silueta), Aglomerativo + dendrograma, GMM, DBSCAN euclídea vs Jaccard | k = 2; DBSCAN euclídea = 1 cluster, Jaccard sí separa | ¿Inercia o silueta? ¿Qué controlan `eps` y `min_samples`? |
 | 05 | `05-setas-evaluacion` | Evaluar | ARI/NMI, métricas internas, scatter clusters vs etiqueta | ARI ≈ 0,62 · NMI ≈ 0,57; Jaccard ARI ≈ 0,29 | ¿Qué mide el ARI? ¿Davies-Bouldin es mejor alto o bajo? |
@@ -48,6 +48,6 @@ Problema: segmentar clientes para marketing. **No hay etiqueta.**
 ---
 
 ## ✅ Progreso
-- 🍄 [x] 01 · [ ] 02 · [ ] 03 · [ ] 04 · [ ] 05 · [ ] 06
+- 🍄 [x] 01 · [x] 02 · [ ] 03 · [ ] 04 · [ ] 05 · [ ] 06
 - 💳 [ ] 07 · [ ] 08 · [ ] 09 · [ ] 10 · [ ] 11 · [ ] 12
 - 🏁 [ ] 13
