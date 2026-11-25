@@ -26,6 +26,7 @@
 
 ## Estilo Pedagógico y Visual (`README.md`)
 - **Índice obligatorio alineado a `scratch/specs.MD`:** Incluir siempre antes del apartado 1 un **índice navegable con enlaces ancla** que refleje 1 a 1 las 5 preguntas del enunciado (más Referencias), para que alumnos y evaluadores ubiquen cada respuesta al instante.
+- **Dos partes en el `README.md` raíz:** *Parte A — Investigación teórica* (índice alineado a `scratch/specs.MD`) y *Parte B — Resolución del taller práctico* (enlaces a `learn_roadmap.md` y a los notebooks de trabajo de la raíz). No mezclar contenido entre ambas.
 - **Simplicidad máxima (alumnos desde cero):** Priorizar **solo lo esencial**. Evitar párrafos largos, jerga innecesaria y badges superfluos (dejar solo los badges útiles de NotebookLM).
 - **Imagen o esquema en cada apartado:** Incluir imágenes didácticas propias en `assets/` (verificadas visualmente) y, cuando aporte claridad de flujo, diagramas **Mermaid** muy simples y coloreados.
 - **Vídeos con timestamps exactos:** Enlazar los vídeos de YouTube siempre con **timestamps reales verificados (`&t=...s`)** directos al minuto donde se explica cada concepto.

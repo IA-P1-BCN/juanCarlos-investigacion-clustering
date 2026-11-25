@@ -7,6 +7,17 @@
 > **Cuaderno público con 25 fuentes** *(13 oficiales + 10 vídeos + 2 guías visuales)*.
 > Límites de NotebookLM por cuaderno: **Cuenta gratuita: 50** · **Google AI Plus: 100** · **Google AI Pro: 300**. Al tener **25 fuentes**, cualquiera puede abrirlo y **clonarlo gratis**.
 
+## 🧭 Este repositorio tiene dos partes
+
+| Parte | Qué es | Ir |
+|---|---|---|
+| 📚 **A — Investigación** | Teoría de clustering desde cero (las 5 preguntas del enunciado) | [Parte A](#parte-a--investigación-teórica) |
+| 🛠️ **B — Taller práctico** | Resolución de los 2 notebooks: 🍄 Setas y 💳 Tarjetas | [Parte B](#parte-b--resolución-del-taller-práctico) |
+
+---
+
+# Parte A — Investigación teórica
+
 ## Índice
 1. [¿Qué es el aprendizaje no supervisado y el clustering?](#1-aprendizaje-no-supervisado-y-clustering)
 2. [Clustering particional (centroides) vs. jerárquico](#2-particional-centroides-vs-jerárquico)
@@ -14,9 +25,6 @@
 4. [Hiperparámetros y métodos de evaluación (Codo y Silueta)](#4-hiperparámetros-y-cómo-evaluar-la-calidad)
 5. [Los 4 algoritmos esenciales (K-Means, Aglomerativo, DBSCAN y GMM)](#5-los-4-algoritmos-esenciales)
 6. [Referencias](#6-referencias)
-
-> [!TIP]
-> **Objetivo 2 — Taller Práctico de ML No Supervisado:** continúa con los dos notebooks prácticos (Setas y Tarjetas de Crédito) en [`docs/workshop/README.md`](docs/workshop/README.md).
 
 ---
 
@@ -160,3 +168,26 @@ flowchart LR
 
 - **Oficiales:** [scikit-learn Clustering](https://scikit-learn.org/stable/modules/clustering.html) · [scikit-learn GMM](https://scikit-learn.org/stable/modules/mixture.html) · [Google ML Clustering](https://developers.google.com/machine-learning/clustering/overview) · [IBM Clustering](https://www.ibm.com/think/topics/clustering) · [Wikipedia DBSCAN](https://en.wikipedia.org/wiki/DBSCAN)
 - **Visuales y vídeos:** [Codificando Bits](https://www.youtube.com/watch?v=A5sfobIi4Ag&t=227s) · [Código Máquina](https://www.youtube.com/watch?v=HMis89lGdkA&t=201s) · [StatQuest](https://www.youtube.com/watch?v=4b5d3muPQmA&t=266s) · [Luis Serrano](https://www.youtube.com/watch?v=q71Niz856KE&t=116s) · [DataMListic](https://www.youtube.com/watch?v=wT2yLNUfyoM&t=30s) · [Naftali Harris (K-Means / DBSCAN)](https://www.naftaliharris.com/blog/visualizing-k-means-clustering/)
+
+---
+
+# Parte B — Resolución del taller práctico
+
+El taller se resuelve **por fases de un proyecto de datos** (Comprender → Preparar → Explorar → Modelar → Evaluar → Interpretar), con **una branch por fase**. Primero 🍄 Setas y después 💳 Tarjetas.
+
+| Qué | Dónde |
+|---|---|
+| 📋 Enunciado del taller | [`docs/workshop/README.md`](docs/workshop/README.md) |
+| 🗺️ Roadmap, fases y progreso | [`learn_roadmap.md`](learn_roadmap.md) |
+| 🍄 Notebook de trabajo — Setas | [`workshop-setas.ipynb`](workshop-setas.ipynb) |
+| 💳 Notebook de trabajo — Tarjetas | `workshop-tarjetas.ipynb` *(se crea en la fase 07)* |
+
+**Cómo ejecutarlo:**
+```bash
+uv sync                                         # instalar el entorno
+uv run python docs/workshop/download_data.py    # descargar los datasets
+```
+Abrir el notebook en VS Code con el kernel **`Python (clustering-uv)`** y pulsar **Run All**.
+
+> [!TIP]
+> La teoría de cada técnica (PCA, K-Means, DBSCAN, GMM, silueta…) está en la [Parte A](#parte-a--investigación-teórica).
