@@ -1,0 +1,16 @@
+[project]
+name = "juan-carlos-investigacion-clustering"
+version = "0.1.0"
+description = "Investigación teórica sobre algoritmos de clustering y taller práctico de ML no supervisado"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "scipy>=1.13",
+    "scikit-learn>=1.5",
+    "matplotlib>=3.9",
+    "seaborn>=0.13",
+    "ipykernel>=6.29",
+    "jupyterlab>=4.2",
+]

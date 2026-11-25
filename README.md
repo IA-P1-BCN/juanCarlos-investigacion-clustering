@@ -15,6 +15,9 @@
 5. [Los 4 algoritmos esenciales (K-Means, Aglomerativo, DBSCAN y GMM)](#5-los-4-algoritmos-esenciales)
 6. [Referencias](#6-referencias)
 
+> [!TIP]
+> **Objetivo 2 — Taller Práctico de ML No Supervisado:** continúa con los dos notebooks prácticos (Setas y Tarjetas de Crédito) en [`docs/workshop/README.md`](docs/workshop/README.md).
+
 ---
 
 ## 1. Aprendizaje no supervisado y clustering

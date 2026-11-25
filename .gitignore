@@ -1,5 +1,14 @@
-# Borradores, especificaciones locales y salidas de nlm
-docs/
+# Borradores, especificaciones locales, scripts auxiliares y salidas de nlm
+scratch/
+
+# Datasets del taller (distribuidos como GitHub Release Assets en data-v1)
+docs/workshop/data/
+
+# Python y Jupyter (uv)
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
 
 # Archivos del sistema macOS
 .DS_Store
