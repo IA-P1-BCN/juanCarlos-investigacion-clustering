@@ -369,3 +369,22 @@ Diario de lo aprendido en cada fase del [roadmap](learn_roadmap.md). En cada fas
   - Segmentos de un blog (40 % / 20 %).
   - Isolation Forest para **fraude con tarjetas**.
   - La cuenta de prueba olvidada (error).
+
+---
+
+## 🏁 Fase 13 · Entrega
+
+**Lo hecho**
+- Notebooks **completos** otra vez: cada fase sale del commit en que se cerró. El código coincide exactamente con el original.
+- `workshop-setas.ipynb` (88 celdas) y `workshop-tarjetas.ipynb` (82 celdas) se ejecutan de principio a fin con **0 errores**.
+- Celda final con el **contraste Setas vs Tarjetas**:
+  - Islas frente a nube continua.
+  - Validación con etiqueta (ARI/NMI) frente a validación sin ella (métricas internas, estabilidad, interpretación).
+  - Los algoritmos coinciden en setas (ARI 0,93–0,99) pero no en tarjetas (0,07–0,36).
+  - DBSCAN encuentra 5 islas en setas; en tarjetas da 1 grupo + 81 de ruido.
+
+**Pregunta de control**
+
+| Pregunta | Mi respuesta | | Respuesta completa |
+|---|---|---|---|
+| ¿Por qué no hay un algoritmo que gane siempre? | «Porque depende de cómo están los datos dibujados en la gráfica: si no hay espacios ni formas, son un todo con brazos, o varios grupos con formas» | ✅ | Cada algoritmo **da por hecha una forma**: K-Means bolas, GMM elipses, DBSCAN zonas densas con huecos. Gana el que coincide con la forma de los datos. Por eso hay que **mirar antes** (PCA, t-SNE) y **validar después**. |

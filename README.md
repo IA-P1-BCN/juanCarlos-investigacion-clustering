@@ -204,7 +204,7 @@ flowchart LR
 | 🗺️ Roadmap, fases y progreso | [`learn_roadmap.md`](learn_roadmap.md) |
 | 📓 Log de aprendizaje (lo aprendido, mis respuestas y dudas) | [`learn_log.md`](learn_log.md) |
 | 🍄 Notebook de trabajo — Setas | [`workshop-setas.ipynb`](workshop-setas.ipynb) |
-| 💳 Notebook de trabajo — Tarjetas | `workshop-tarjetas.ipynb` *(se crea en la fase 07)* |
+| 💳 Notebook de trabajo — Tarjetas | [`workshop-tarjetas.ipynb`](workshop-tarjetas.ipynb) |
 
 **Cómo ejecutarlo:**
 ```bash
