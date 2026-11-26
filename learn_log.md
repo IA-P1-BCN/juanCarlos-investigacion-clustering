@@ -221,3 +221,30 @@ Diario de lo aprendido en cada fase del [roadmap](learn_roadmap.md). En cada fas
   - Mediana: 434 en California; 200 amigos suben la media de 7,33 a 7,82 y la mediana se queda en 6.
   - Colas largas: el logaritmo las encoge.
   - Escalar: pulgadas frente a centímetros cambia los vecinos.
+
+---
+
+## 💳 Fase 09 · Exploración (Tarjetas)
+
+**Lo aprendido**
+- **Scree plot:** PC1 guarda el 27 % y PC2 el 20 %. Para el **80 %** hacen falta **7 de 17** componentes, y no hay codo claro.
+- **Pesos:** **PC1 = «cuánto compra»** (`PURCHASES` 0,41, `PURCHASES_TRX` 0,39…) y **PC2 = «cuánto tira de efectivo»** (`CASH_ADVANCE` 0,44, `BALANCE` 0,40…).
+- **PCA 2D:** sale **una nube continua**, densa cerca del origen y con brazos hacia compras y hacia efectivo. **No hay islas.**
+  - Los clientes varían **poco a poco**. Las setas son especies con rasgos «en paquete».
+  - Segmentar será **cortar la nube en zonas**, y las métricas internas saldrán bajas.
+
+**Preguntas de control**
+
+| Pregunta | Mi respuesta | | Respuesta completa |
+|---|---|---|---|
+| ¿Por qué no se ven grupos claros (y en las setas sí)? | «Porque no hay tantos factores para diferenciar (características)» | 🟡 | No es por el número de columnas: los clientes varían **de forma continua** y las setas son especies con rasgos que van juntos. |
+| ¿Dónde cae un cliente que compra mucho y casi no saca efectivo? | «Abajo a la derecha» | ✅ | PC1 alto y PC2 bajo. |
+| ¿`TENURE` (0,08 en PC1) participa? ¿Importa? | «No importa mucho» | ✅ | **Participa** (en PCA participan todas), pero apenas mueve el eje. |
+| ¿Por qué «varían poco a poco» lo explica mejor? | «No hay ítems que se diferencien, son ítems progresivos, más difícil de agrupar; por eso el gráfico es una bola con brazos largos» | ✅ | Exacto. |
+
+**Mis preguntas**
+- **«¿Cómo decidimos PC1 y PC2? ¿Cogemos los datos, aplicamos un x/y y las columnas que salen de ese grupo forman PC1, y lo mismo para y?»**
+  → Casi. PCA **no reparte las columnas en grupos**: **todas participan en PC1 y en PC2**, cada una con un peso. Por ejemplo, `CREDIT_LIMIT` pesa 0,21 en PC1 y 0,24 en PC2.
+  - **PC1** es la dirección en la que los clientes **más se diferencian**.
+  - **PC2** es la siguiente, **perpendicular** a PC1.
+  - El **nombre** («compras», «efectivo») lo ponemos nosotros, mirando los pesos más grandes.
