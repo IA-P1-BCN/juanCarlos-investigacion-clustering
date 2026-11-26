@@ -10,7 +10,7 @@ Se trabaja en los notebooks de la **raíz** (`workshop-setas.ipynb`, `workshop-t
 1. **Claude** crea la branch desde `main`, añade al notebook las celdas de esa fase y las ejecuta con `uv`.
 2. **Claude** explica el código y los resultados.
 3. **Tú** lo replicas en VS Code (kernel `Python (clustering-uv)`) y respondes las preguntas de control.
-4. Cuando digas **«entendido»**: commit `taller(NN): ...`, `merge --no-ff` a `main`, ✅ en el progreso y **push a GitHub** (`main` + la branch).
+4. Cuando digas **«entendido»**: se actualiza el [log de aprendizaje](learn_log.md), commit `taller(NN): ...`, `merge --no-ff` a `main`, ✅ en el progreso y **push a GitHub** (`main` + la branch).
 
 > La salida esperada son los valores de referencia del bootcamp (NotebookLM «FactoriaF5»).
 
@@ -48,6 +48,6 @@ Problema: segmentar clientes para marketing. **No hay etiqueta.**
 ---
 
 ## ✅ Progreso
-- 🍄 [x] 01 · [x] 02 · [x] 03 · [x] 04 · [ ] 05 · [ ] 06
+- 🍄 [x] 01 · [x] 02 · [x] 03 · [x] 04 · [x] 05 · [ ] 06
 - 💳 [ ] 07 · [ ] 08 · [ ] 09 · [ ] 10 · [ ] 11 · [ ] 12
 - 🏁 [ ] 13
