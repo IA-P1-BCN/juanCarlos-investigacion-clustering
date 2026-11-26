@@ -108,7 +108,7 @@ Diario de lo aprendido en cada fase del [roadmap](learn_roadmap.md). En cada fas
 - **Métricas internas** (silueta ↑, Davies-Bouldin ↓, Calinski-Harabasz ↑): miden la **forma** de los grupos y no usan la etiqueta.
 - **Métricas externas** (ARI, NMI): comparan con la **realidad**. Solo se pueden usar si hay etiqueta.
 - **K-Means k = 2:** ARI = **0,617** y NMI = **0,566**. Aglomerativo y GMM salen casi igual.
-- **DBSCAN euclídea** tiene la **mejor silueta (0,357)** y el **peor ARI (0,374)**: grupos bonitos no son lo mismo que grupos útiles. Jaccard lo mejora (0,443).
+- **DBSCAN euclídea** tiene la **mejor silueta (0,357)** y el **peor ARI (0,374)**: grupos bonitos no son lo mismo que grupos útiles. Jaccard dio más ARI (0,443), pero ⚠️ **corregido en la fase 06**: la mejora venía de no usar PCA, no de Jaccard.
 - **El ARI mira quién va con quién, no los nombres de los grupos.** Con los nombres al revés da lo mismo (0,617) y un reparto al azar da 0.
 
 **Preguntas de control**
@@ -128,3 +128,45 @@ Diario de lo aprendido en cada fase del [roadmap](learn_roadmap.md). En cada fas
   - Compañero 2 (nombres al revés): **0 %** y ARI **1,00**.
   - Compañero 3 (0 1 0 1): **50 %** y ARI **−0,50**.
   - **El % de aciertos engaña en los dos sentidos; el ARI no.**
+
+---
+
+## 🍄 Fase 06 · Interpretación
+
+**Lo aprendido**
+- **Isolation Forest** hace cortes al azar hasta dejar cada punto solo, y lo raro se aísla con **menos cortes**. Con `contamination = 0.05` encontró **407 setas (5 %)**.
+  - El 80 % de las raras son comestibles, con combinaciones poco comunes: tallo naranja (47 % frente a 0 % en el resto) o crecen entre hojas (50 % frente a 8 %).
+  - **Raro no es lo mismo que error.**
+- **Corrección de la fase 05**
+  - Cada seta tiene **exactamente 21 unos**, así que Jaccard y la euclídea sobre el one-hot completo dan **los mismos grupos** (mismo ARI, 0,443).
+  - La mejora venía de **no reducir con PCA**.
+  - Lección: **al comparar, cambia una sola cosa cada vez**.
+- **Jaccard ignora los ceros compartidos.** Gana cuando un 0 significa *ausencia* (cestas de la compra, intereses).
+  - Con la euclídea, «solo pan» frente a «solo leche» queda a 1,41, igual que dos compras grandes parecidas.
+  - Con Jaccard, la primera pareja queda a 1,0 (nada en común) y la segunda a 0,4.
+
+**Preguntas de control**
+
+| Pregunta | Mi respuesta | | Respuesta completa |
+|---|---|---|---|
+| ¿Por qué Jaccard va mejor con 0/1? ¿Por qué en setas da igual? | «Puedes agrupar más fácilmente; son las dos versiones de la comparación, compartir o diferenciar» | 🟡 | Falta la clave: **ignora los ceros compartidos**. En setas son equivalentes porque todas tienen 21 unos. |
+| ¿Qué es una anomalía? ¿Hay que borrar las 407? | «Es un dato alejado de grupos, no implica que esté mal, puede ser algo real pero poco frecuente» | ✅ | Hay que **mirarla** antes de borrarla: puede ser un error, un fraude o algo real y raro. |
+| Cestas: ¿qué cuenta la euclídea como «parecido» entre A (pan) y B (leche)? | «Solo que comparten los ceros. ¿Qué pasaría con solo café, o cualquier otro único?» | ✅ | Para la euclídea, todos los clientes de un solo producto quedan a 1,41 entre sí, aunque no compartan nada. |
+| ¿Por qué ignorar los ceros tiene sentido en cestas? | «Porque cada producto tiene un valor intrínseco, no es un "rasgo" como en las setas» | ✅ | En una cesta, un 0 es **ausencia**. En una seta, un 0 en `olor_f` **informa**: tiene **otro** olor. |
+| Si comparten 16 de 21, ¿en cuántas se diferencian? | «En 5» | ✅ | 21 − 16 = 5. |
+| ¿Por qué en setas «compartir» y «diferenciar» dan lo mismo? | «Porque son rasgos únicos, no son valores, entonces son autoexcluyentes» | ✅ | Siempre hay 21 unos, así que comparten + se diferencian = 21. Si sabes una cifra, sabes la otra. |
+
+**Mis preguntas**
+- **«Redefine las preguntas con más contexto.»**
+  → Rehicimos las preguntas con la tabla de las cestas y el ejemplo del one-hot del olor, para poder contestar sin mirar el notebook.
+
+---
+
+## 🍄 Conclusiones de Setas
+
+| Pregunta | Respuesta |
+|---|---|
+| ¿Hay información para separar comestibles y venenosas? | **Sí**: Random Forest acierta el 100 % |
+| ¿Se separan solas, sin etiqueta? | **En buena parte**: K-Means k = 2 → ARI ≈ 0,62 · NMI ≈ 0,57 |
+| ¿Las métricas internas eligen bien? | **No solas**: la mejor silueta tuvo el peor ARI |
+| ¿Anomalías? | ≈ 5 %, poco comunes pero reales |
