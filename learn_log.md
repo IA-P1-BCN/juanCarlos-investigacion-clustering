@@ -331,3 +331,41 @@ Diario de lo aprendido en cada fase del [roadmap](learn_roadmap.md). En cada fas
   - `n_init=10` frente a los malos arranques.
   - Los diagramas de silueta para elegir k.
   - t-SNE solo para visualizar, porque rompe las formas continuas.
+
+---
+
+## 💳 Fase 12 · Interpretación (Tarjetas)
+
+**Lo aprendido**
+- **El cluster 0, 1 o 2 no significa nada hasta que lo describimos.** Para describirlo:
+  1. Añadir la columna `cluster` al `df` **sin escalar**.
+  2. Calcular la **media por cluster**.
+  3. **Estandarizar entre clusters** y pintar un heatmap (rojo = por encima, azul = por debajo).
+- **Entregable:**
+
+  | Segmento | % | Rasgos | Estrategia |
+  |---|---|---|---|
+  | 💤 Poco activos | 68,3 | Todo bajo: saldo, límite (~3.300 €), compras | Activar: cashback, recordatorios |
+  | ⚠️ Riesgo por adelantos | 17,9 | Adelantos ~3.900 €, saldo alto, casi nunca paga el total | Vigilar el impago; préstamo más barato que el adelanto |
+  | 💎 VIP compradores | 13,8 | Compras ~4.300 €, 57 transacciones, más límite, paga el total | Fidelizar: puntos, más límite, premium |
+
+- **Isolation Forest** (`contamination=0.05`) marca **448 atípicos**:
+  - Por segmento: 281 VIP, 160 de riesgo y solo 7 poco activos.
+  - Medianas frente a los normales: compras 4.900 € frente a 330 €; límite 9.500 € frente a 3.000 €.
+- De los **81 de ruido de DBSCAN**, **80** también son atípicos para Isolation Forest. Dos métodos distintos señalan a los mismos clientes.
+- **Atípico ≠ error:** Isolation Forest dice «raro»; el **porqué** sale de mirar al cliente.
+
+**Preguntas de control**
+
+| Pregunta | Mi respuesta | | Respuesta completa |
+|---|---|---|---|
+| Presupuesto para una sola campaña: ¿qué segmento? | «Fidelización clientes VIP, dinero PC1» | ✅ | Los VIP concentran el dinero (brazo de PC1). Elegir **riesgo** también sería válido con su motivo. |
+| Cliente con compras de 30.000 € y límite de 30.000 €: ¿error, fraude o VIP? ¿Cómo averiguarlo? | «Mirar DBSCAN» | 🟡 | DBSCAN solo repite que está lejos. Hay que mirar **sus datos**: coherencia (error), pagos y antigüedad (VIP), un cambio brusco en el historial (fraude). |
+| Con `PRC_FULL_PAYMENT = 1` y `TENURE = 12`, ¿qué es y qué harías? | «VIP» · «Trato VIP» | ✅ | Gran cliente fiel. **No bloquearlo**: subirle el límite, darle un gestor, y apartarlo del cálculo de medias del segmento. |
+
+**Mis preguntas**
+- (Ninguna nueva.) Recuadros de los libros:
+  - Los clusters no se etiquetan solos.
+  - Segmentos de un blog (40 % / 20 %).
+  - Isolation Forest para **fraude con tarjetas**.
+  - La cuenta de prueba olvidada (error).
