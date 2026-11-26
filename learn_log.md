@@ -170,3 +170,26 @@ Diario de lo aprendido en cada fase del [roadmap](learn_roadmap.md). En cada fas
 | ¿Se separan solas, sin etiqueta? | **En buena parte**: K-Means k = 2 → ARI ≈ 0,62 · NMI ≈ 0,57 |
 | ¿Las métricas internas eligen bien? | **No solas**: la mejor silueta tuvo el peor ARI |
 | ¿Anomalías? | ≈ 5 %, poco comunes pero reales |
+
+---
+
+## 💳 Fase 07 · Comprensión del problema y de los datos (Tarjetas)
+
+**Lo aprendido**
+- Hay **8950 clientes × 18 columnas**, todas **numéricas** salvo `CUST_ID`. **No hay etiqueta**: se valida con métricas internas y mirando si los grupos tienen sentido.
+- **`CUST_ID`** tiene **8950 valores distintos**, uno por cliente: es una **matrícula**.
+  - Dice *quién* es el cliente, no *cómo* usa la tarjeta.
+  - Convertido en número **metería ruido**: C10001 y C10002 quedarían «vecinos» solo por ir seguidos, y su escala de miles se comería la distancia.
+- **Escalas muy distintas:** las frecuencias van de 0 a 1 y `CREDIT_LIMIT` llega a 30.000.
+- **Colas largas:** en `CASH_ADVANCE` la mediana es 0 y la media, 979.
+- **Nulos:** `CREDIT_LIMIT` (1) y `MINIMUM_PAYMENTS` (313).
+- **Búsqueda sistemática de valores imposibles:** 0 negativos y **8 clientes con `CASH_ADVANCE_FREQUENCY` > 1**. Todos llevan menos de 12 meses como clientes.
+
+**Preguntas de control**
+
+| Pregunta | Mi respuesta | | Respuesta completa |
+|---|---|---|---|
+| ¿Qué cambia frente a Setas? | «No tengo la "solución", y de datos string a datos numéricos» | ✅ | Además: hay que **rellenar los nulos y escalar**, y validar con métricas internas. |
+| ¿Por qué `CUST_ID` no sirve? | «Tiene 5 valores, no define nada» | 🟡 | No define nada, correcto. Pero tiene **8950 valores distintos**: los 5 eran las filas de `.head()`. |
+| *(Aclaración)* | «Me refería a que tiene cinco tipos, pero no nos da ningún dato, aunque hubiera 1000, ¿no?» | ✅ | El problema no es cuántos valores tiene, sino **qué significan**: un ID es un nombre elegido al azar. |
+| ¿Qué haría K-Means con el ID convertido en número? | «Nada, serían siempre números diferentes» | 🟡 | No aporta nada **y además hace daño**: agruparía por orden de alta y separaría a clientes idénticos. **Hay que quitarlo.** |
