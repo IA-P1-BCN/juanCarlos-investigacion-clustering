@@ -248,3 +248,34 @@ Diario de lo aprendido en cada fase del [roadmap](learn_roadmap.md). En cada fas
   - **PC1** es la dirección en la que los clientes **más se diferencian**.
   - **PC2** es la siguiente, **perpendicular** a PC1.
   - El **nombre** («compras», «efectivo») lo ponemos nosotros, mirando los pesos más grandes.
+
+---
+
+## 💳 Fase 10 · Modelado (Tarjetas)
+
+**Lo aprendido**
+- Sin etiqueta, **k se elige con la silueta y con el sentido de negocio**.
+  - Silueta máxima en **k = 3** (0,241). Es baja porque los datos son una nube continua.
+  - Con k ≥ 5 aparece un grupo de **86 clientes extremos**, que no sirve para una campaña.
+- **K-Means k = 3:** 68,3 % / 17,9 % / 13,8 %.
+- **Aglomerativo:** sale parecido, pero no idéntico.
+- **GMM:** reparte muy distinto (3410 / 2934 / 2606), porque sus campanas se adaptan a las colas largas. **Sin etiqueta no hay árbitro.**
+- **DBSCAN** sobre el PCA 2D: siempre sale un grupo gigante. Con `eps = 1.0`, **1 grupo + 81 de ruido**. Necesita **huecos**, y la nube no los tiene.
+- **K-Means siempre da los k grupos que le pidas, existan o no.**
+
+**Preguntas de control**
+
+| Pregunta | Mi respuesta | | Respuesta completa |
+|---|---|---|---|
+| ¿Cuándo DBSCAN en vez de K-Means? | «Cuando en el PCA 2D hay grupos separados; si no, no lo ve» | 🟡 | Cuando hay grupos **separados por huecos**, **formas raras** (lunas, anillos), quieres **detectar ruido** o **no sabes k**. El PCA 2D solo es donde lo probamos. |
+| ¿Por qué no k = 7? | «Porque k = 3 tiene más inercia y más silueta, y tendríamos muchos grupos. ¿Existen tantos grupos o nos estaríamos desviando?» | 🟡 | La silueta y los grupos pequeños (86) son buenas razones. La **inercia no**, porque siempre baja al subir k. |
+| GPS de taxis con zonas concurridas separadas por calles vacías: ¿K-Means o DBSCAN? | «DBSCAN, porque hay esas calles de separación… aunque sean concurridas hay una separación geográfica, que corresponde a los puntos libres de la gráfica» | ✅ | Las calles vacías son los **huecos** de baja densidad. Además, DBSCAN sigue formas raras y marca las recogidas sueltas como ruido. |
+
+**Mis preguntas**
+- **«¿Existen tantos grupos o nos estaríamos desviando?»**
+  → Nos desviaríamos. K-Means corta la nube en los k trozos que le pidas. Un grupo «existe» si tiene **buena silueta**, un **tamaño útil** y una **interpretación de negocio**.
+- **«Reintenta nlm.»**
+  → Añadimos 3 recuadros de los libros:
+  - K-Means corta California en 10 zonas y prefiere grupos de tamaño parecido.
+  - GMM y sus formas de campana.
+  - DBSCAN falla sin huecos; la maldición de la dimensión.
