@@ -279,3 +279,55 @@ Diario de lo aprendido en cada fase del [roadmap](learn_roadmap.md). En cada fas
   - K-Means corta California en 10 zonas y prefiere grupos de tamaño parecido.
   - GMM y sus formas de campana.
   - DBSCAN falla sin huecos; la maldición de la dimensión.
+
+---
+
+## 💳 Fase 11 · Evaluación (Tarjetas)
+
+**Lo aprendido**
+- Sin etiqueta solo hay **métricas internas**:
+
+  | Modelo | Silueta ↑ | Davies-Bouldin ↓ | Calinski ↑ |
+  |---|---|---|---|
+  | **K-Means** | **0,241** | **1,597** | **1606** |
+  | Aglomerativo | 0,169 | 1,82 | 1289 |
+  | GMM | 0,094 | 2,995 | 816 |
+  | DBSCAN | 0,719 ⚠️ | 1,306 | 760 |
+
+- **Trampa de DBSCAN:** su silueta es alta porque solo separa 81 puntos raros de un bloque con el 99 % de los clientes (8869). No segmenta nada.
+- **El ARI sin etiqueta** sirve para comparar dos repartos cualesquiera:
+  - **Algoritmo contra algoritmo:** K-Means–Aglomerativo 0,36; K-Means–GMM 0,07.
+  - **Semilla contra semilla** (estabilidad):
+    - K-Means [1, 1, 1, 1, 0,98].
+    - GMM [1, 0,98, **0,8**, 1, 1]. Con 0,8, **635 clientes cambian de segmento**.
+- **Silueta por segmento** (diagrama de cuchillos):
+
+  | Segmento | Silueta media | Puntos negativos |
+  |---|---|---|
+  | 0 | 0,09 | 29 % |
+  | 1 | 0,335 | 0 % |
+  | 2 | 0,04 | 42 % |
+
+  El segmento 1 está bien formado; los segmentos 0 y 2 se solapan.
+- **t-SNE** solo sirve para **ver**:
+  - Cada color ocupa su zona, aunque los bordes se tocan.
+  - No mide distancias reales.
+
+**Preguntas de control**
+
+| Pregunta | Mi respuesta | | Respuesta completa |
+|---|---|---|---|
+| ¿Por qué no se puede calcular el ARI como en las setas? ¿Para qué lo usamos entonces? | «El ARI es con datos categorizados, aka la solución, y aquí no los tenemos» | 🟡 | No hay etiqueta real. Aun así, el ARI compara **dos repartos cualesquiera**: algoritmo contra algoritmo y semilla contra semilla (estabilidad). |
+| ¿Por qué la silueta de 0,719 de DBSCAN no la hace la mejor? | «La segmentación: un grupo de 81 no sirve, es ruido» | 🟡 | Los 81 son ruido, y además el **99 % cae en un solo grupo**. La silueta es alta porque mide lo lejos que están los raros, no si los grupos son útiles. |
+| Si K-Means da ARI 0,3 contra sí mismo con otra semilla, ¿qué significa? | «El algoritmo es estable» | ❌ | **Inestable:** salen dos segmentaciones muy distintas, así que ninguna es fiable. Un ARI cercano a 1 indica que es estable. |
+| Marketing con un grupo de 8869 y otro de 81: ¿silueta o utilidad? | «Que los grupos sirvan» | ✅ | Solo se podría hacer **una campaña**. La silueta ayuda, pero no decide sola. |
+| ¿K-Means o GMM para entregar? | «K-Means, GMM demasiado bueno» | 🟡 | K-Means, porque GMM es **menos estable** (0,8 con una semilla) y tiene peores métricas internas. |
+| Completa: «GMM con ARI 0,8 significa ___ y por eso ___» | «Es estable, tiene el valor más alto de ARI» | 🟡 | Eso vale para K-Means. Con GMM, **≈ 635 clientes cambian de grupo**, así que es menos fiable. |
+
+**Mis preguntas**
+- **«Reintenta nlm.»**
+  → Añadimos 4 recuadros de los libros:
+  - El jerárquico con unión por máximo equivale a K-Means.
+  - `n_init=10` frente a los malos arranques.
+  - Los diagramas de silueta para elegir k.
+  - t-SNE solo para visualizar, porque rompe las formas continuas.
