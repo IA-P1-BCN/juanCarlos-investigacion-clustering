@@ -193,3 +193,31 @@ Diario de lo aprendido en cada fase del [roadmap](learn_roadmap.md). En cada fas
 | ¿Por qué `CUST_ID` no sirve? | «Tiene 5 valores, no define nada» | 🟡 | No define nada, correcto. Pero tiene **8950 valores distintos**: los 5 eran las filas de `.head()`. |
 | *(Aclaración)* | «Me refería a que tiene cinco tipos, pero no nos da ningún dato, aunque hubiera 1000, ¿no?» | ✅ | El problema no es cuántos valores tiene, sino **qué significan**: un ID es un nombre elegido al azar. |
 | ¿Qué haría K-Means con el ID convertido en número? | «Nada, serían siempre números diferentes» | 🟡 | No aporta nada **y además hace daño**: agruparía por orden de alta y separaría a clientes idénticos. **Hay que quitarlo.** |
+
+---
+
+## 💳 Fase 08 · Preparación de los datos (Tarjetas)
+
+**Lo aprendido**
+- Quitamos `CUST_ID` → quedan 8950 × 17. **Recortamos a 1** (`clip`) las 8 frecuencias imposibles, para no perder clientes.
+- **Nulos → mediana:** en `MINIMUM_PAYMENTS` la media es 864 y la mediana 312. Unos pocos extremos (hasta 76.406) tiran de la media.
+- **Colas largas** en todas las variables de dinero (asimetría hasta 13,9). Hay que mirar el histograma, no solo `describe()`.
+- **`StandardScaler`** deja todas las variables con media 0 y desviación 1.
+  - Midiendo 2000 parejas de clientes, sin escalar `CREDIT_LIMIT` aporta el **39,8 %** de la distancia y 9 variables aportan **0,0 %**.
+  - Después de escalar, todas aportan entre el 2 % y el 9 %.
+
+**Preguntas de control**
+
+| Pregunta | Mi respuesta | | Respuesta completa |
+|---|---|---|---|
+| ¿Por qué la mediana y no la media? | «La mediana no se ve afectada por valores extremos» | ✅ | Es el valor del medio: describe mejor a un cliente típico (312 frente a 864). |
+| ¿Qué pasa en K-Means sin escalar? | «Los grupos salen muy juntos» | ❌ | El problema es **qué variables deciden**: casi solo el dinero (el límite de crédito, 40 %). Las frecuencias se ignoran. |
+| Mismo `CREDIT_LIMIT`, uno compra siempre y otro nunca: sin escalar, ¿parecidos o distintos? | «Parecidos, y uno gasta mucho más que el otro, mejor cliente» | ✅ | La frecuencia (0–1) no pesa nada frente a los miles. Matiz: la frecuencia mide **cada cuánto** compra, no **cuánto** gasta. |
+| ¿Deberían ir al mismo grupo? | «No. Como no se equilibró el peso de cada columna, se da importancia a columnas que no la tienen tanto y se le niega a otras» | ✅ | Sin escalar, el peso depende de la **unidad**, no de la importancia. Escalar hace que todas empiecen con el mismo peso. |
+
+**Mis preguntas**
+- **«Prueba otra vez nlm.»**
+  → Tras el login añadimos 3 recuadros de los libros:
+  - Mediana: 434 en California; 200 amigos suben la media de 7,33 a 7,82 y la mediana se queda en 6.
+  - Colas largas: el logaritmo las encoge.
+  - Escalar: pulgadas frente a centímetros cambia los vecinos.
